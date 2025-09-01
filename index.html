@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Matrix background -->
+    <div class="matrix-background" id="matrix-background"></div>
+    
     <div class="container">
         <header>
             <h1>🖥️ Горячие клавиши macOS</h1>
@@ -2465,6 +2468,69 @@
                     row.innerHTML = newHtml;
                 }
             });
+        });
+
+        // Matrix falling symbols animation
+        function createMatrixBackground() {
+            const matrixBackground = document.getElementById('matrix-background');
+            const symbols = ['⌘', '⌥', '⌃', '⇧'];
+            const numberOfColumns = Math.floor(window.innerWidth / 60); // One column every 60px
+            
+            function createColumn() {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                
+                // Random position
+                column.style.left = Math.random() * window.innerWidth + 'px';
+                
+                // Random animation duration (8-15 seconds)
+                const duration = 8 + Math.random() * 7;
+                column.style.animationDuration = duration + 's';
+                
+                // Random delay (0-5 seconds)
+                const delay = Math.random() * 5;
+                column.style.animationDelay = delay + 's';
+                
+                // Create a string of random symbols
+                const columnHeight = Math.floor(5 + Math.random() * 10); // 5-15 symbols per column
+                let symbolString = '';
+                for (let i = 0; i < columnHeight; i++) {
+                    const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                    symbolString += randomSymbol + '<br>';
+                }
+                
+                column.innerHTML = symbolString;
+                matrixBackground.appendChild(column);
+                
+                // Remove column after animation
+                setTimeout(() => {
+                    if (column.parentNode) {
+                        column.parentNode.removeChild(column);
+                    }
+                }, (duration + delay) * 1000);
+            }
+            
+            // Create initial columns
+            for (let i = 0; i < numberOfColumns; i++) {
+                setTimeout(() => createColumn(), Math.random() * 3000);
+            }
+            
+            // Continuously create new columns
+            setInterval(() => {
+                if (Math.random() < 0.7) { // 70% chance to create a new column
+                    createColumn();
+                }
+            }, 1000);
+        }
+        
+        // Start matrix animation
+        createMatrixBackground();
+        
+        // Restart animation on window resize
+        window.addEventListener('resize', () => {
+            const matrixBackground = document.getElementById('matrix-background');
+            matrixBackground.innerHTML = '';
+            setTimeout(createMatrixBackground, 100);
         });
     </script>
 </body>
