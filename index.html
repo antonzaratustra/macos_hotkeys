@@ -2451,6 +2451,8 @@
                 // Clear all intervals and existing columns
                 matrixIntervals.forEach(interval => clearInterval(interval));
                 matrixIntervals = [];
+                staticMatrixIntervals.forEach(interval => clearInterval(interval));
+                staticMatrixIntervals = [];
                 const matrixBackground = document.getElementById('matrix-background');
                 matrixBackground.innerHTML = '';
             }
@@ -2492,6 +2494,62 @@
         // Matrix animation state
         let matrixEnabled = true;
         let matrixIntervals = [];
+        let staticMatrixIntervals = [];
+        
+        // Create static matrix columns at the top
+        function createStaticMatrix() {
+            const matrixBackground = document.getElementById('matrix-background');
+            const symbols = ['⌘', '⌥', '⌃', '⇧'];
+            const numberOfStaticColumns = Math.floor(window.innerWidth / 80); // One static column every 80px
+            
+            // Clear existing static columns
+            const existingStatic = matrixBackground.querySelectorAll('.matrix-static');
+            existingStatic.forEach(col => col.remove());
+            
+            if (!matrixEnabled) return;
+            
+            for (let i = 0; i < numberOfStaticColumns; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-static';
+                
+                // Position
+                column.style.left = (i * 80 + Math.random() * 40) + 'px';
+                
+                // Create initial symbols
+                const columnHeight = Math.floor(8 + Math.random() * 6); // 8-14 symbols
+                let symbolString = '';
+                for (let j = 0; j < columnHeight; j++) {
+                    const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                    symbolString += randomSymbol + '<br>';
+                }
+                
+                column.innerHTML = symbolString;
+                matrixBackground.appendChild(column);
+                
+                // Set random animation delay
+                column.style.animationDelay = Math.random() * 2 + 's';
+            }
+            
+            // Update static columns content periodically
+            const staticUpdateInterval = setInterval(() => {
+                if (!matrixEnabled) return;
+                
+                const staticColumns = matrixBackground.querySelectorAll('.matrix-static');
+                staticColumns.forEach(column => {
+                    if (Math.random() < 0.3) { // 30% chance to update column
+                        const columnHeight = Math.floor(8 + Math.random() * 6);
+                        let symbolString = '';
+                        for (let j = 0; j < columnHeight; j++) {
+                            const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                            symbolString += randomSymbol + '<br>';
+                        }
+                        column.innerHTML = symbolString;
+                    }
+                });
+            }, 3000); // Update every 3 seconds
+            
+            staticMatrixIntervals.push(staticUpdateInterval);
+        }
         
         // Matrix falling symbols animation
         function createMatrixBackground() {
@@ -2538,11 +2596,16 @@
             // Clear existing intervals
             matrixIntervals.forEach(interval => clearInterval(interval));
             matrixIntervals = [];
+            staticMatrixIntervals.forEach(interval => clearInterval(interval));
+            staticMatrixIntervals = [];
             
             if (!matrixEnabled) {
                 matrixBackground.innerHTML = '';
                 return;
             }
+            
+            // Create static matrix at top first
+            createStaticMatrix();
             
             // Create initial columns with staggered timing
             for (let i = 0; i < numberOfColumns * 1.5; i++) { // 50% more initial columns
@@ -2575,7 +2638,11 @@
         window.addEventListener('resize', () => {
             const matrixBackground = document.getElementById('matrix-background');
             matrixBackground.innerHTML = '';
-            setTimeout(createMatrixBackground, 100);
+            setTimeout(() => {
+                if (matrixEnabled) {
+                    createMatrixBackground();
+                }
+            }, 100);
         });
     </script>
 </body>
