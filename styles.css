@@ -36,9 +36,10 @@ body {
     font-weight: 600;
     color: #ff8c00;
     text-shadow: 0 0 10px rgba(255, 140, 0, 0.8), 0 0 20px rgba(255, 140, 0, 0.6);
-    opacity: 0.3;
+    opacity: 0.4; /* Increased from 0.3 */
     animation: matrix-fall linear infinite;
     user-select: none;
+    line-height: 1.2;
 }
 
 @keyframes matrix-fall {
@@ -47,15 +48,39 @@ body {
         opacity: 0;
     }
     10% {
-        opacity: 0.3;
+        opacity: 0.4;
     }
     90% {
-        opacity: 0.3;
+        opacity: 0.4;
     }
     100% {
         transform: translateY(calc(100vh + 100px));
         opacity: 0;
     }
+}
+
+/* Additional matrix column variations */
+.matrix-column:nth-child(4n+1) {
+    font-size: 18px;
+    opacity: 0.3;
+    animation-duration: 7s;
+}
+
+.matrix-column:nth-child(4n+2) {
+    font-size: 22px;
+    opacity: 0.5;
+    text-shadow: 0 0 15px rgba(255, 140, 0, 0.9), 0 0 25px rgba(255, 140, 0, 0.7);
+}
+
+.matrix-column:nth-child(4n+3) {
+    font-size: 16px;
+    opacity: 0.25;
+}
+
+.matrix-column:nth-child(4n) {
+    font-size: 24px;
+    opacity: 0.6;
+    text-shadow: 0 0 20px rgba(255, 140, 0, 1), 0 0 30px rgba(255, 140, 0, 0.8);
 }
 
 body.light-theme {
@@ -67,7 +92,7 @@ body.light-theme {
 body.light-theme .matrix-column {
     color: #ff6b35;
     text-shadow: 0 0 10px rgba(255, 107, 53, 0.8), 0 0 20px rgba(255, 107, 53, 0.6);
-    opacity: 0.2;
+    opacity: 0.3; /* Increased from 0.2 */
 }
 
 .container {
@@ -228,7 +253,7 @@ body.light-theme .nav-btn.active {
     align-items: center;
 }
 
-.view-toggle, .theme-toggle {
+.view-toggle, .theme-toggle, .matrix-toggle {
     padding: 10px 16px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -241,19 +266,39 @@ body.light-theme .nav-btn.active {
     backdrop-filter: blur(10px);
 }
 
-.view-toggle:hover, .theme-toggle:hover {
+.view-toggle:hover, .theme-toggle:hover, .matrix-toggle:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-1px);
 }
 
-body.light-theme .view-toggle, body.light-theme .theme-toggle {
+.matrix-toggle.disabled {
+    background: rgba(255, 99, 71, 0.2);
+    border-color: rgba(255, 99, 71, 0.3);
+    color: #ff6347;
+}
+
+.matrix-toggle.disabled:hover {
+    background: rgba(255, 99, 71, 0.3);
+}
+
+body.light-theme .view-toggle, body.light-theme .theme-toggle, body.light-theme .matrix-toggle {
     background: rgba(255, 255, 255, 0.8);
     border-color: rgba(0, 0, 0, 0.1);
     color: #495057;
 }
 
-body.light-theme .view-toggle:hover, body.light-theme .theme-toggle:hover {
+body.light-theme .view-toggle:hover, body.light-theme .theme-toggle:hover, body.light-theme .matrix-toggle:hover {
     background: rgba(255, 255, 255, 0.95);
+}
+
+body.light-theme .matrix-toggle.disabled {
+    background: rgba(255, 99, 71, 0.15);
+    border-color: rgba(255, 99, 71, 0.25);
+    color: #ff6347;
+}
+
+body.light-theme .matrix-toggle.disabled:hover {
+    background: rgba(255, 99, 71, 0.25);
 }
 
 /* Группы горячих клавиш */
