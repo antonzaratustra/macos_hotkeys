@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Inter', 'Proxima Nova', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Proxima Nova', 'Helvetica Neue', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     color: #e0e0e0;
     line-height: 1.6;
@@ -33,7 +33,7 @@ body {
     position: absolute;
     top: 0;
     height: 200px;
-    font-family: 'Inter', 'Proxima Nova', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'SF Pro Display', 'Inter', 'Proxima Nova', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 18px;
     font-weight: 600;
     color: #ff8c00;
@@ -72,7 +72,7 @@ body {
 .matrix-column {
     position: absolute;
     top: -100px;
-    font-family: 'Inter', 'Proxima Nova', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'SF Pro Display', 'Inter', 'Proxima Nova', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 20px;
     font-weight: 600;
     color: #ff8c00;
@@ -400,7 +400,7 @@ body.light-theme .matrix-toggle.disabled:hover {
 }
 
 .modifier-label {
-    font-family: 'Inter', 'Proxima Nova', 'Helvetica Neue', sans-serif;
+    font-family: 'SF Pro Display', 'Inter', 'Proxima Nova', 'Helvetica Neue', sans-serif;
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
@@ -552,7 +552,7 @@ body.light-theme .shortcut-keys {
     border: 2px solid transparent;
     border-radius: 8px;
     padding: 6px 10px;
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'Menlo', 'Consolas', monospace;
+    font-family: 'SF Pro Display', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'Menlo', 'Consolas', monospace;
     font-size: 13px;
     font-weight: 700;
     font-stretch: condensed;
@@ -596,7 +596,7 @@ body.light-theme .shortcut-keys {
     border: 2px solid transparent;
     border-radius: 8px;
     padding: 6px 10px;
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'Menlo', 'Consolas', monospace;
+    font-family: 'SF Pro Display', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'Menlo', 'Consolas', monospace;
     font-size: 16px;
     font-weight: 700;
     font-stretch: condensed;
@@ -678,6 +678,7 @@ body.light-theme .symbol-key:hover {
 
 /* Символы */
 .symbol {
+    font-family: 'SF Pro Display', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'Menlo', 'Consolas', monospace;
     font-size: 18px;
     color: #ff8c00;
     font-weight: bold;
@@ -700,6 +701,20 @@ body.light-theme .symbol {
 
 body.light-theme .shortcut-description {
     color: #6c757d;
+}
+
+/* High priority font override for macOS symbols in keyboard keys */
+kbd.symbol-key, kbd.key.symbol-key, .key.symbol-key, .symbol-key {
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Proxima Nova', sans-serif !important;
+}
+
+/* Additional high-specificity selectors for symbol keys */
+.shortcut-keys kbd.symbol-key,
+.shortcut-keys .symbol-key,
+.shortcuts-table kbd.symbol-key,
+.shortcuts-table .symbol-key {
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-weight: 700 !important;
 }
 
 /* Подвал */
