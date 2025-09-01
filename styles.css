@@ -39,18 +39,18 @@ header {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+/* Новая строка заголовка */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
 body.light-theme header {
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
 }
 
 h1 {
@@ -74,7 +74,7 @@ body.light-theme h1 {
     position: relative;
     flex: 1;
     max-width: 400px;
-    margin: 0 20px;
+    margin: 0;
 }
 
 #search-input {
@@ -172,6 +172,7 @@ body.light-theme .nav-btn.active {
 .toggles {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .view-toggle, .theme-toggle {
@@ -602,4 +603,21 @@ body.light-theme ::-webkit-scrollbar-thumb {
 
 body.light-theme ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 107, 53, 0.8);
+}
+
+/* Адаптивная сетка для мобильных устройств */
+@media (max-width: 768px) {
+    .header-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .search-container {
+        max-width: 100%;
+    }
+    
+    .toggles {
+        justify-content: center;
+    }
 }

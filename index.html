@@ -10,10 +10,17 @@
     <div class="container">
         <header>
             <h1>🖥️ Горячие клавиши macOS</h1>
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="🔍 Поиск горячих клавиш..." />
+            <div class="header-row">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="🔍 Поиск горячих клавиш..." />
+                </div>
+                <div class="toggles">
+                    <div class="view-toggle" id="view-toggle">📊 Сетка</div>
+                    <div class="theme-toggle" id="theme-toggle">☀️ Светлая</div>
+                </div>
             </div>
             <div class="navigation-buttons">
+                <button class="nav-btn" data-section="all">📋 Все</button>
                 <button class="nav-btn" data-section="system">⚙️ Системные</button>
                 <button class="nav-btn" data-section="finder">📁 Finder</button>
                 <button class="nav-btn" data-section="text">📝 Текст</button>
@@ -25,11 +32,6 @@
                 <button class="nav-btn" data-section="safari">🌐 Safari</button>
                 <button class="nav-btn" data-section="spotlight">🔍 Spotlight</button>
                 <button class="nav-btn" data-section="terminal">💻 Terminal</button>
-                <button class="nav-btn" data-section="all">📋 Все</button>
-            </div>
-            <div class="toggles">
-                <div class="view-toggle" id="view-toggle">📊 Сетка</div>
-                <div class="theme-toggle" id="theme-toggle">☀️ Светлая</div>
             </div>
         </header>
 
