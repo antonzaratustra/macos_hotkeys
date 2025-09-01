@@ -56,7 +56,7 @@ body.light-theme header {
 h1 {
     font-size: 32px;
     font-weight: 600;
-    background: linear-gradient(45deg, #00d4ff, #5b86e5);
+    background: linear-gradient(45deg, #ff8c00, #ff6347);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -64,7 +64,7 @@ h1 {
 }
 
 body.light-theme h1 {
-    background: linear-gradient(45deg, #007bff, #6f42c1);
+    background: linear-gradient(45deg, #ff6b35, #ff8c42);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -95,8 +95,8 @@ body.light-theme h1 {
 }
 
 #search-input:focus {
-    border-color: #00d4ff;
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    border-color: #ff8c00;
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.3);
     background: rgba(255, 255, 255, 0.15);
 }
 
@@ -111,8 +111,8 @@ body.light-theme #search-input::placeholder {
 }
 
 body.light-theme #search-input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
+    border-color: #ff6b35;
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
 }
 
 /* Кнопки навигации */
@@ -139,17 +139,17 @@ body.light-theme #search-input:focus {
 }
 
 .nav-btn:hover {
-    background: linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(91, 134, 229, 0.3));
-    border-color: rgba(0, 212, 255, 0.5);
+    background: linear-gradient(45deg, rgba(255, 140, 0, 0.3), rgba(255, 99, 71, 0.3));
+    border-color: rgba(255, 140, 0, 0.5);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3);
 }
 
 .nav-btn.active {
-    background: linear-gradient(45deg, #00d4ff, #5b86e5);
+    background: linear-gradient(45deg, #ff8c00, #ff6347);
     border-color: transparent;
     color: #ffffff;
-    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
 }
 
 body.light-theme .nav-btn {
@@ -159,12 +159,12 @@ body.light-theme .nav-btn {
 }
 
 body.light-theme .nav-btn:hover {
-    background: linear-gradient(45deg, rgba(0, 123, 255, 0.1), rgba(111, 66, 193, 0.1));
-    border-color: rgba(0, 123, 255, 0.3);
+    background: linear-gradient(45deg, rgba(255, 107, 53, 0.1), rgba(255, 140, 66, 0.1));
+    border-color: rgba(255, 107, 53, 0.3);
 }
 
 body.light-theme .nav-btn.active {
-    background: linear-gradient(45deg, #007bff, #6f42c1);
+    background: linear-gradient(45deg, #ff6b35, #ff8c42);
     color: #ffffff;
 }
 
@@ -241,7 +241,7 @@ body.light-theme .shortcuts-group:hover {
 }
 
 .shortcuts-group h2 {
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(91, 134, 229, 0.2));
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 99, 71, 0.2));
     padding: 18px 20px;
     font-size: 20px;
     font-weight: 600;
@@ -251,7 +251,7 @@ body.light-theme .shortcuts-group:hover {
 }
 
 body.light-theme .shortcuts-group h2 {
-    background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(111, 66, 193, 0.1));
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 140, 66, 0.1));
     color: #495057;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -273,7 +273,7 @@ body.light-theme .shortcuts-group h2 {
 }
 
 .shortcut-row:hover {
-    background: rgba(0, 212, 255, 0.1);
+    background: rgba(255, 140, 0, 0.1);
     transform: translateX(5px);
 }
 
@@ -282,7 +282,7 @@ body.light-theme .shortcut-row {
 }
 
 body.light-theme .shortcut-row:hover {
-    background: rgba(0, 123, 255, 0.1);
+    background: rgba(255, 107, 53, 0.1);
 }
 
 /* Чередование цветов строк */
@@ -307,7 +307,7 @@ body.light-theme .shortcut-row:nth-child(even) {
     font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
     font-weight: 600;
     font-size: 15px;
-    color: #00d4ff;
+    color: #ff8c00;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -315,7 +315,7 @@ body.light-theme .shortcut-row:nth-child(even) {
 }
 
 body.light-theme .shortcut-keys {
-    color: #007bff;
+    color: #ff6b35;
 }
 
 /* Клавиши */
@@ -362,15 +362,15 @@ body.light-theme .key:hover {
 /* Символы */
 .symbol {
     font-size: 18px;
-    color: #00d4ff;
+    color: #ff8c00;
     font-weight: bold;
     margin: 0 2px;
-    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
 }
 
 body.light-theme .symbol {
-    color: #007bff;
-    text-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+    color: #ff6b35;
+    text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
 }
 
 .shortcut-description {
@@ -528,12 +528,12 @@ body.light-theme footer {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 212, 255, 0.5);
+    background: rgba(255, 140, 0, 0.5);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 212, 255, 0.8);
+    background: rgba(255, 140, 0, 0.8);
 }
 
 body.light-theme ::-webkit-scrollbar-track {
@@ -541,9 +541,9 @@ body.light-theme ::-webkit-scrollbar-track {
 }
 
 body.light-theme ::-webkit-scrollbar-thumb {
-    background: rgba(0, 123, 255, 0.5);
+    background: rgba(255, 107, 53, 0.5);
 }
 
 body.light-theme ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 123, 255, 0.8);
+    background: rgba(255, 107, 53, 0.8);
 }
