@@ -3158,6 +3158,39 @@
         // Navigation buttons
         const navButtons = document.querySelectorAll('.nav-btn');
         
+        // Function to check if we're on mobile
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+        
+        // Function to scroll to shortcuts container on mobile
+        function scrollToSections() {
+            if (isMobile()) {
+                const shortcutsContainer = document.getElementById('shortcuts-container');
+                const modifierPanel = document.getElementById('modifier-keys-panel');
+                
+                if (shortcutsContainer) {
+                    // Calculate offset for sticky modifier panel
+                    let offset = 0;
+                    if (modifierPanel) {
+                        const panelHeight = modifierPanel.offsetHeight;
+                        const panelMargin = 20; // top sticky position
+                        offset = panelHeight + panelMargin + 10; // extra 10px padding
+                    }
+                    
+                    // Get the position of shortcuts container
+                    const containerRect = shortcutsContainer.getBoundingClientRect();
+                    const scrollPosition = window.pageYOffset + containerRect.top - offset;
+                    
+                    // Smooth scroll with calculated offset
+                    window.scrollTo({
+                        top: scrollPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        }
+        
         navButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const targetSection = button.dataset.section;
@@ -3174,6 +3207,8 @@
                 
                 if (targetSection === 'favorites') {
                     showFavoritesOnly();
+                    // Scroll to sections on mobile after a short delay
+                    setTimeout(scrollToSections, 100);
                     return;
                 }
                 
@@ -3215,6 +3250,9 @@
                 } else {
                     shortcutsContainer.classList.remove('single-column');
                 }
+                
+                // Scroll to sections on mobile after a short delay to ensure rendering
+                setTimeout(scrollToSections, 100);
             });
         });
         
