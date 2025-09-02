@@ -706,10 +706,22 @@ body.light-theme .nav-btn.active {
         display: none;
     }
     
-    /* Disable tooltips for header toggles on mobile */
+    /* Disable tooltips for header toggles on mobile - override all states */
     .header-toggle::before,
-    .header-toggle::after {
+    .header-toggle::after,
+    .header-toggle:hover::before,
+    .header-toggle:hover::after,
+    .header-toggle[data-active="true"]::before,
+    .header-toggle[data-active="true"]::after,
+    .header-toggle[data-active="false"]::before,
+    .header-toggle[data-active="false"]::after,
+    .header-toggle[data-active="true"]:hover::before,
+    .header-toggle[data-active="true"]:hover::after,
+    .header-toggle[data-active="false"]:hover::before,
+    .header-toggle[data-active="false"]:hover::after {
         display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
     }
 }
 
