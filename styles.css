@@ -527,15 +527,20 @@ body.light-theme .nav-btn.active {
 
 /* When panel is sticky (scrolled), show tooltips below */
 .modifier-keys-panel.sticky .modifier-key::before {
-    bottom: auto;
-    top: 120%;
+    bottom: auto !important;
+    top: 120% !important;
 }
 
 .modifier-keys-panel.sticky .modifier-key::after {
-    bottom: auto;
-    top: 110%;
-    border-top-color: transparent;
-    border-bottom-color: rgba(20, 20, 20, 0.95);
+    bottom: auto !important;
+    top: 110% !important;
+    border-top-color: transparent !important;
+    border-bottom-color: rgba(20, 20, 20, 0.95) !important;
+}
+
+/* Add visual indicator when sticky (for debugging) */
+.modifier-keys-panel.sticky {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 140, 0, 0.3);
 }
 
 .modifier-key:hover::before,
