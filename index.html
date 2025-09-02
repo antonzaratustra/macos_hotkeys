@@ -18,7 +18,9 @@
             <h1>🖥️ Горячие клавиши macOS</h1>
             <div class="header-row">
                 <div class="search-container">
-                    <input type="text" id="search-input" placeholder="🔍 Поиск горячих клавиш..." />
+                    <input type="text" id="search-input" placeholder="🔍 Поиск горячих клавиш..." autocomplete="off" />
+                    <div class="search-hints" id="search-hints"></div>
+                    <div class="search-results-info" id="search-results-info"></div>
                 </div>
                 <div class="toggles">
                     <div class="view-toggle" id="view-toggle">📊 Сетка</div>
@@ -2341,32 +2343,163 @@
     </div>
 
     <script>
-        // Search functionality
+        // Search functionality with improved algorithm and hints
         const searchInput = document.getElementById('search-input');
+        const searchHints = document.getElementById('search-hints');
+        const searchResultsInfo = document.getElementById('search-results-info');
         const shortcutRows = document.querySelectorAll('.shortcut-row');
         const shortcutGroups = document.querySelectorAll('.shortcuts-group');
         
+        // Common search terms and their synonyms
+        const searchTerms = {
+            'новое': ['новый', 'создать', 'открыть'],
+            'окно': ['вкладка', 'окна'],
+            'копировать': ['копия', 'скопировать'],
+            'вставить': ['вставка', 'вставлять'],
+            'сохранить': ['сохранение'],
+            'поиск': ['найти', 'отыскать'],
+            'закрыть': ['закрытие'],
+            'отмена': ['отменить'],
+            'скрыть': ['скрытие', 'спрятать'],
+            'панель': ['панели']
+        };
+        
+        // Extract common terms from shortcuts for hints
+        const popularTerms = [
+            'новое окно', 'копировать', 'вставить', 'сохранить', 'отмена',
+            'поиск', 'закрыть', 'скрыть', 'печать', 'скриншот',
+            'spotlight', 'finder', 'terminal', 'выделить все', 'полный экран'
+        ];
+        
+        // Improved search algorithm with word boundaries and fuzzy matching
+        function normalizeText(text) {
+            return text.toLowerCase()
+                .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+                .replace(/[^\w\sЀ-ӿ]/g, ' ') // Keep only word characters and Cyrillic
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+        
+        function tokenizeWords(text) {
+            return normalizeText(text).split(' ').filter(word => word.length > 1);
+        }
+        
+        function calculateRelevance(query, text) {
+            const queryWords = tokenizeWords(query);
+            const textWords = tokenizeWords(text);
+            
+            if (queryWords.length === 0) return 0;
+            
+            let relevanceScore = 0;
+            const totalQueryWords = queryWords.length;
+            
+            for (const queryWord of queryWords) {
+                let bestWordMatch = 0;
+                
+                for (const textWord of textWords) {
+                    // Exact match
+                    if (textWord === queryWord) {
+                        bestWordMatch = 1;
+                        break;
+                    }
+                    // Starts with query word
+                    else if (textWord.startsWith(queryWord)) {
+                        bestWordMatch = Math.max(bestWordMatch, 0.8);
+                    }
+                    // Contains query word
+                    else if (textWord.includes(queryWord)) {
+                        bestWordMatch = Math.max(bestWordMatch, 0.6);
+                    }
+                    // Check synonyms
+                    else if (searchTerms[queryWord] && searchTerms[queryWord].some(syn => 
+                        textWord.includes(syn) || textWord.startsWith(syn)
+                    )) {
+                        bestWordMatch = Math.max(bestWordMatch, 0.7);
+                    }
+                }
+                
+                relevanceScore += bestWordMatch;
+            }
+            
+            return relevanceScore / totalQueryWords;
+        }
+        
+        function showSearchHints(query) {
+            if (!query || query.length < 2) {
+                searchHints.style.display = 'none';
+                return;
+            }
+            
+            const filteredTerms = popularTerms.filter(term => {
+                const relevance = calculateRelevance(query, term);
+                return relevance > 0.3 && !term.toLowerCase().includes(query.toLowerCase());
+            }).slice(0, 5);
+            
+            if (filteredTerms.length > 0) {
+                searchHints.innerHTML = filteredTerms
+                    .map(term => `<div class="search-hint" data-term="${term}">${term}</div>`)
+                    .join('');
+                searchHints.style.display = 'block';
+                
+                // Add click handlers to hints
+                searchHints.querySelectorAll('.search-hint').forEach(hint => {
+                    hint.addEventListener('click', () => {
+                        searchInput.value = hint.dataset.term;
+                        searchInput.dispatchEvent(new Event('input'));
+                        searchHints.style.display = 'none';
+                    });
+                });
+            } else {
+                searchHints.style.display = 'none';
+            }
+        }
+        
+        function updateSearchResultsInfo(visibleCount, totalCount) {
+            if (searchInput.value.trim()) {
+                searchResultsInfo.textContent = `Найдено: ${visibleCount} из ${totalCount} комбинаций`;
+                searchResultsInfo.style.display = 'block';
+            } else {
+                searchResultsInfo.style.display = 'none';
+            }
+        }
+        
         searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
+            const query = e.target.value.trim();
+            
+            // Show search hints
+            showSearchHints(query);
             
             if (query === '') {
                 // Show all groups and rows
                 shortcutGroups.forEach(group => group.style.display = 'block');
                 shortcutRows.forEach(row => row.style.display = 'flex');
+                updateSearchResultsInfo(0, 0);
                 return;
             }
+            
+            let totalVisible = 0;
+            let totalRows = 0;
             
             shortcutGroups.forEach(group => {
                 const rows = group.querySelectorAll('.shortcut-row');
                 let hasVisibleRows = false;
                 
                 rows.forEach(row => {
-                    const keys = row.querySelector('.shortcut-keys').textContent.toLowerCase();
-                    const description = row.querySelector('.shortcut-description').textContent.toLowerCase();
+                    totalRows++;
+                    const keys = row.querySelector('.shortcut-keys').textContent;
+                    const description = row.querySelector('.shortcut-description').textContent;
                     
-                    if (keys.includes(query) || description.includes(query)) {
+                    // Calculate relevance for both keys and description
+                    const keyRelevance = calculateRelevance(query, keys);
+                    const descRelevance = calculateRelevance(query, description);
+                    const maxRelevance = Math.max(keyRelevance, descRelevance);
+                    
+                    // Set minimum relevance threshold
+                    if (maxRelevance > 0.4) {
                         row.style.display = 'flex';
+                        row.style.order = Math.round((1 - maxRelevance) * 100); // Order by relevance
                         hasVisibleRows = true;
+                        totalVisible++;
                     } else {
                         row.style.display = 'none';
                     }
@@ -2374,6 +2507,25 @@
                 
                 group.style.display = hasVisibleRows ? 'block' : 'none';
             });
+            
+            updateSearchResultsInfo(totalVisible, totalRows);
+        });
+        
+        // Hide hints when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchHints.contains(e.target)) {
+                searchHints.style.display = 'none';
+            }
+        });
+        
+        // Hide hints on Escape key
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchHints.style.display = 'none';
+                if (!searchInput.value) {
+                    searchInput.blur();
+                }
+            }
         });
         
         // Navigation buttons

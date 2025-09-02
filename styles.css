@@ -166,9 +166,19 @@ header {
 /* Новая строка заголовка */
 .header-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Center the search container */
     align-items: center;
     gap: 20px;
+    position: relative;
+}
+
+/* Position toggles absolutely to the right */
+.toggles {
+    position: absolute;
+    right: 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 body.light-theme header {
@@ -196,38 +206,100 @@ body.light-theme h1 {
 /* Поиск */
 .search-container {
     position: relative;
-    flex: 1;
-    max-width: 400px;
+    width: 500px; /* Fixed width for better centering */
+    max-width: 90vw; /* Responsive on small screens */
     margin: 0;
 }
 
 #search-input {
     width: 100%;
-    padding: 12px 20px;
+    padding: 14px 24px;
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 25px;
     color: #e0e0e0;
     font-size: 16px;
+    font-weight: 500;
     outline: none;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 #search-input::placeholder {
     color: rgba(255, 255, 255, 0.6);
+    font-weight: 400;
 }
 
 #search-input:focus {
     border-color: #ff8c00;
-    box-shadow: 0 0 20px rgba(255, 140, 0, 0.3);
+    box-shadow: 0 0 25px rgba(255, 140, 0, 0.4), 0 4px 20px rgba(0, 0, 0, 0.15);
     background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
 }
 
+/* Search hints dropdown */
+.search-hints {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(40, 40, 40, 0.95);
+    border: 1px solid rgba(255, 140, 0, 0.3);
+    border-radius: 12px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    margin-top: 8px;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.search-hint {
+    padding: 12px 20px;
+    cursor: pointer;
+    color: #e0e0e0;
+    font-size: 14px;
+    font-weight: 400;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.search-hint:last-child {
+    border-bottom: none;
+}
+
+.search-hint:hover {
+    background: rgba(255, 140, 0, 0.2);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+/* Search results info */
+.search-results-info {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 12px;
+    padding: 6px 12px;
+    background: rgba(255, 140, 0, 0.15);
+    border: 1px solid rgba(255, 140, 0, 0.3);
+    border-radius: 15px;
+    color: #ff8c00;
+    font-size: 12px;
+    font-weight: 500;
+    display: none;
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+}
+
+/* Light theme adjustments */
 body.light-theme #search-input {
     background: rgba(255, 255, 255, 0.9);
     border-color: rgba(0, 0, 0, 0.2);
     color: #212529;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 body.light-theme #search-input::placeholder {
@@ -236,7 +308,30 @@ body.light-theme #search-input::placeholder {
 
 body.light-theme #search-input:focus {
     border-color: #ff6b35;
-    box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+    box-shadow: 0 0 25px rgba(255, 107, 53, 0.3), 0 4px 20px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+body.light-theme .search-hints {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(255, 107, 53, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .search-hint {
+    color: #495057;
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .search-hint:hover {
+    background: rgba(255, 107, 53, 0.1);
+    color: #212529;
+}
+
+body.light-theme .search-results-info {
+    background: rgba(255, 107, 53, 0.15);
+    border-color: rgba(255, 107, 53, 0.3);
+    color: #ff6b35;
 }
 
 /* Кнопки навигации */
@@ -293,11 +388,7 @@ body.light-theme .nav-btn.active {
 }
 
 /* Переключатели */
-.toggles {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
+/* Note: moved to absolute positioning in .header-row */
 
 .view-toggle, .theme-toggle, .matrix-toggle {
     padding: 10px 16px;
@@ -836,6 +927,20 @@ body.light-theme footer {
         font-size: 20px;
     }
     
+    .search-container {
+        width: 100%;
+    }
+    
+    #search-input {
+        padding: 12px 18px;
+        font-size: 15px;
+    }
+    
+    .modifier-keys-panel {
+        gap: 10px;
+        padding: 12px;
+    }
+    
     .navigation-buttons {
         grid-template-columns: repeat(2, 1fr);
         display: grid;
@@ -910,15 +1015,37 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 @media (max-width: 768px) {
     .header-row {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
         gap: 15px;
     }
     
-    .search-container {
-        max-width: 100%;
+    .toggles {
+        position: relative;
+        right: auto;
+        justify-content: center;
+        flex-wrap: wrap;
     }
     
-    .toggles {
-        justify-content: center;
+    .search-container {
+        width: 100%;
+        max-width: none;
+    }
+    
+    .navigation-buttons {
+        gap: 8px;
+    }
+    
+    .nav-btn {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    
+    .view-toggle, .theme-toggle, .matrix-toggle {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    .search-hints {
+        max-height: 150px;
     }
 }
