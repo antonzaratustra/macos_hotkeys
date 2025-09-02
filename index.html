@@ -18,9 +18,9 @@
             <div class="header-title-row">
                 <h1>🍎 Горячие клавиши macOS</h1>
                 <div class="header-toggles">
-                    <div class="header-toggle" id="matrix-toggle" data-active="true">✨</div>
-                    <div class="header-toggle" id="view-toggle" data-active="false">📊</div>
-                    <div class="header-toggle" id="theme-toggle" data-active="false">☀️</div>
+                    <div class="header-toggle" id="matrix-toggle" data-active="true" data-tooltip="Включить/выключить анимацию матрицы">✨</div>
+                    <div class="header-toggle" id="view-toggle" data-active="false" data-tooltip="Переключить между списком и сеткой">📋</div>
+                    <div class="header-toggle" id="theme-toggle" data-active="false" data-tooltip="Переключить между темной и светлой темой">☀️</div>
                 </div>
             </div>
             <div class="header-row">
@@ -3135,7 +3135,7 @@
             shortcutsContainer.classList.toggle('list-view');
             const isActive = shortcutsContainer.classList.contains('list-view');
             viewToggle.dataset.active = isActive;
-            viewToggle.innerHTML = isActive ? '📋' : '📊';
+            viewToggle.innerHTML = isActive ? '📋' : '📋';
         });
 
         // Theme toggle
@@ -3153,7 +3153,7 @@
         matrixToggle.addEventListener('click', () => {
             matrixEnabled = !matrixEnabled;
             matrixToggle.dataset.active = matrixEnabled;
-            matrixToggle.innerHTML = matrixEnabled ? '✨' : '❌';
+            matrixToggle.innerHTML = matrixEnabled ? '✨' : '✨';
             
             if (matrixEnabled) {
                 createMatrixBackground();

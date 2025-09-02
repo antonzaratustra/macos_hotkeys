@@ -228,11 +228,119 @@ body.light-theme h1 {
     color: #666;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     user-select: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+/* Tooltip for header toggles - base styles */
+.header-toggle::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 50%;
+    right: 120%;
+    transform: translateY(-50%);
+    background: #000000 !important;
+    color: #ffffff !important;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 99999 !important;
+    backdrop-filter: blur(10px);
+    border: 2px solid #ff8c00 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 140, 0, 0.8) !important;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    text-shadow: none !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background-clip: border-box !important;
+}
+
+/* Specific tooltip styles for active state */
+.header-toggle[data-active="true"]::before {
+    background: #000000 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background-clip: border-box !important;
+    text-shadow: none !important;
+}
+
+/* Specific tooltip styles for inactive state */
+.header-toggle[data-active="false"]::before {
+    background: #000000 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background-clip: border-box !important;
+    text-shadow: none !important;
+}
+
+.header-toggle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 110%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-left-color: #000000 !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 99999 !important;
+}
+
+/* Specific arrow styles for all states */
+.header-toggle[data-active="true"]::after,
+.header-toggle[data-active="false"]::after {
+    border-left-color: #000000 !important;
+}
+
+.header-toggle:hover::before,
+.header-toggle:hover::after {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Force tooltip visibility for all states on hover */
+.header-toggle[data-active="true"]:hover::before,
+.header-toggle[data-active="false"]:hover::before {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    color: #ffffff !important;
+    background: #000000 !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+.header-toggle[data-active="true"]:hover::after,
+.header-toggle[data-active="false"]:hover::after {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
 }
 
 .header-toggle:hover {
     transform: scale(1.1);
     filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.6));
+}
+
+.header-toggle[data-active="true"]:hover {
+    filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.8));
+}
+
+.header-toggle[data-active="false"]:hover {
+    filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.6)) grayscale(0);
 }
 
 .header-toggle[data-active="true"] {
@@ -244,8 +352,8 @@ body.light-theme h1 {
 }
 
 .header-toggle[data-active="false"] {
-    color: #666;
-    filter: none;
+    color: #444444;
+    filter: grayscale(1);
 }
 
 body.light-theme .header-toggle[data-active="true"] {
