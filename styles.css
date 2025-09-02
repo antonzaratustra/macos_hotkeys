@@ -484,7 +484,6 @@ body.light-theme .nav-btn.active {
 .modifier-key::before {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: 120%;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(20, 20, 20, 0.95);
@@ -503,20 +502,40 @@ body.light-theme .nav-btn.active {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
     border: 1px solid rgba(255, 99, 71, 0.3);
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    pointer-events: none;
+    
+    /* Default position above */
+    bottom: 120%;
 }
 
 .modifier-key::after {
     content: '';
     position: absolute;
-    bottom: 110%;
     left: 50%;
     transform: translateX(-50%);
     border: 6px solid transparent;
-    border-top-color: rgba(20, 20, 20, 0.95);
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
     z-index: 1001;
+    pointer-events: none;
+    
+    /* Default arrow pointing up */
+    bottom: 110%;
+    border-top-color: rgba(20, 20, 20, 0.95);
+}
+
+/* When panel is sticky (scrolled), show tooltips below */
+.modifier-keys-panel.sticky .modifier-key::before {
+    bottom: auto;
+    top: 120%;
+}
+
+.modifier-keys-panel.sticky .modifier-key::after {
+    bottom: auto;
+    top: 110%;
+    border-top-color: transparent;
+    border-bottom-color: rgba(20, 20, 20, 0.95);
 }
 
 .modifier-key:hover::before,
@@ -594,10 +613,19 @@ body.light-theme .modifier-key:hover {
     grid-template-columns: repeat(auto-fill, minmax(650px, 1fr));
     gap: 25px;
     transition: all 0.3s ease;
+    justify-content: center;
 }
 
 .shortcuts-container.list-view {
     grid-template-columns: 1fr;
+}
+
+/* Center single column when filtered */
+.shortcuts-container.single-column {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+    margin: 0 auto;
+    justify-content: center;
 }
 
 .shortcuts-group {
@@ -659,8 +687,10 @@ body.light-theme .shortcuts-group h2 {
 }
 
 .shortcut-row:hover {
-    background: rgba(255, 140, 0, 0.1);
+    background: linear-gradient(90deg, rgba(255, 140, 0, 0.15), rgba(255, 99, 71, 0.15));
     transform: translateX(5px);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
 }
 
 body.light-theme .shortcut-row {
@@ -668,7 +698,8 @@ body.light-theme .shortcut-row {
 }
 
 body.light-theme .shortcut-row:hover {
-    background: rgba(255, 107, 53, 0.1);
+    background: linear-gradient(90deg, rgba(255, 107, 53, 0.12), rgba(255, 140, 66, 0.12));
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.25);
 }
 
 /* Чередование цветов строк */

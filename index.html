@@ -2352,8 +2352,28 @@
         const shortcutRows = document.querySelectorAll('.shortcut-row');
         const shortcutGroups = document.querySelectorAll('.shortcuts-group');
         const modifierKeys = document.querySelectorAll('.modifier-key');
+        const modifierKeysPanel = document.getElementById('modifier-keys-panel');
         
         let activeModifierFilter = null;
+        
+        // Intersection Observer to detect sticky state of modifier panel
+        function setupStickyDetection() {
+            const observer = new IntersectionObserver(
+                ([e]) => {
+                    const isSticky = e.intersectionRatio < 1;
+                    modifierKeysPanel.classList.toggle('sticky', isSticky);
+                },
+                {
+                    threshold: [1],
+                    rootMargin: '-20px 0px 0px 0px'
+                }
+            );
+            
+            observer.observe(modifierKeysPanel);
+        }
+        
+        // Initialize sticky detection
+        setupStickyDetection();
         
         // Common search terms and their synonyms
         const searchTerms = {
@@ -2479,7 +2499,7 @@
             }
         }
         
-        function updateSearchResultsInfo(visibleCount, totalCount, filterType = '') {
+        function updateSearchResultsInfo(visibleCount, totalCount, visibleGroups = 0) {
             let infoText = '';
             
             if (activeModifierFilter && searchInput.value.trim()) {
@@ -2496,6 +2516,14 @@
             } else {
                 searchResultsInfo.style.display = 'none';
             }
+            
+            // Apply single-column layout for one visible group
+            const shortcutsContainer = document.getElementById('shortcuts-container');
+            if (visibleGroups === 1) {
+                shortcutsContainer.classList.add('single-column');
+            } else {
+                shortcutsContainer.classList.remove('single-column');
+            }
         }
         
         function performSearch() {
@@ -2506,6 +2534,7 @@
             
             let totalVisible = 0;
             let totalRows = 0;
+            let visibleGroups = 0;
             
             shortcutGroups.forEach(group => {
                 const rows = group.querySelectorAll('.shortcut-row');
@@ -2544,10 +2573,15 @@
                     }
                 });
                 
-                group.style.display = hasVisibleRows ? 'block' : 'none';
+                if (hasVisibleRows) {
+                    group.style.display = 'block';
+                    visibleGroups++;
+                } else {
+                    group.style.display = 'none';
+                }
             });
             
-            updateSearchResultsInfo(totalVisible, totalRows);
+            updateSearchResultsInfo(totalVisible, totalRows, visibleGroups);
         }
         
         function clearAllFilters() {
@@ -2566,7 +2600,11 @@
                 });
             });
             
-            updateSearchResultsInfo(0, 0);
+            // Remove single-column layout
+            const shortcutsContainer = document.getElementById('shortcuts-container');
+            shortcutsContainer.classList.remove('single-column');
+            
+            updateSearchResultsInfo(0, 0, 0);
         }
         
         // Event listeners
@@ -2635,9 +2673,13 @@
                 navButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
                 
+                const shortcutsContainer = document.getElementById('shortcuts-container');
+                let visibleGroups = 0;
+                
                 if (targetSection === 'all') {
                     shortcutGroups.forEach(group => {
                         group.style.display = 'block';
+                        visibleGroups++;
                         group.querySelectorAll('.shortcut-row').forEach(row => {
                             row.style.display = 'flex';
                         });
@@ -2647,6 +2689,7 @@
                         const groupSection = group.dataset.section;
                         if (groupSection === targetSection) {
                             group.style.display = 'block';
+                            visibleGroups++;
                             group.querySelectorAll('.shortcut-row').forEach(row => {
                                 row.style.display = 'flex';
                             });
@@ -2654,6 +2697,13 @@
                             group.style.display = 'none';
                         }
                     });
+                }
+                
+                // Apply single-column layout for one visible group
+                if (visibleGroups === 1) {
+                    shortcutsContainer.classList.add('single-column');
+                } else {
+                    shortcutsContainer.classList.remove('single-column');
                 }
             });
         });
