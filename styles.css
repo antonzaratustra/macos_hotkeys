@@ -473,10 +473,65 @@ body.light-theme .nav-btn.active {
     cursor: pointer;
     transition: all 0.3s ease;
     min-width: 80px; /* Fixed width like Command button */
+    position: relative;
     box-shadow: 
         0 4px 8px rgba(0, 0, 0, 0.3),
         0 0 15px rgba(255, 99, 71, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Tooltip styling */
+.modifier-key::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 20, 20, 0.95);
+    color: #ffffff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+    width: 280px;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 99, 71, 0.3);
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.modifier-key::after {
+    content: '';
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(20, 20, 20, 0.95);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.modifier-key:hover::before,
+.modifier-key:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modifier-key.active {
+    background: linear-gradient(135deg, #ff7457 0%, #ff5555 50%, #ff7457 100%);
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.4),
+        0 0 25px rgba(255, 99, 71, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
 }
 
 /* Special case for Command button - adaptive width */
@@ -957,6 +1012,12 @@ body.light-theme footer {
         padding: 12px;
     }
     
+    .modifier-key::before {
+        width: 180px;
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+    
     .modifier-key {
         min-width: 50px;
     }
@@ -1077,6 +1138,12 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
     
     .search-hints {
         max-height: 150px;
+    }
+    
+    .modifier-key::before {
+        width: 220px;
+        font-size: 12px;
+        padding: 10px 14px;
     }
     
     .modifier-key {

@@ -48,23 +48,23 @@
 
         <!-- Floating Modifier Keys Panel -->
         <div class="modifier-keys-panel" id="modifier-keys-panel">
-            <div class="modifier-key" data-key="fn">
+            <div class="modifier-key" data-key="fn" data-tooltip="Fn (Function) — активирует дополнительные функции на клавишах F1-F12. Появилась с развитием компактных клавиатур для экономии места.">
                 <div class="modifier-symbol">🌐</div>
                 <div class="modifier-label">Fn</div>
             </div>
-            <div class="modifier-key" data-key="ctrl">
+            <div class="modifier-key" data-key="ctrl" data-tooltip="Ctrl (Control) — одна из первых клавиш-модификаторов, появилась в 1960-х для управления терминалами. В macOS используется реже, чем в Windows.">
                 <div class="modifier-symbol">⌃</div>
                 <div class="modifier-label">Ctrl</div>
             </div>
-            <div class="modifier-key" data-key="option">
+            <div class="modifier-key" data-key="option" data-tooltip="Option (Alt) — позволяет вводить специальные символы и диакритические знаки. Название отражает предоставление альтернативных вариантов символов.">
                 <div class="modifier-symbol">⌥</div>
                 <div class="modifier-label">Option</div>
             </div>
-            <div class="modifier-key" data-key="shift">
+            <div class="modifier-key" data-key="shift" data-tooltip="Shift — исторически поднимала каретку печатной машинки для печати заглавных букв. Символ ⇧ напоминает стрелку 'вверх'.">
                 <div class="modifier-symbol">⇧</div>
                 <div class="modifier-label">Shift</div>
             </div>
-            <div class="modifier-key" data-key="command">
+            <div class="modifier-key" data-key="command" data-tooltip="Command (⌘) — символ взят из шведского дорожного знака 'достопримечательность'. Сьюзан Каре выбрала его в 1984 году для клавиши Apple, чтобы избежать путаницы с логотипом компании.">
                 <div class="modifier-symbol">⌘</div>
                 <div class="modifier-label">Command</div>
             </div>
@@ -2345,12 +2345,15 @@
     </div>
 
     <script>
-        // Search functionality with improved algorithm and hints
+        // Enhanced search functionality with modifier filtering
         const searchInput = document.getElementById('search-input');
         const searchHints = document.getElementById('search-hints');
         const searchResultsInfo = document.getElementById('search-results-info');
         const shortcutRows = document.querySelectorAll('.shortcut-row');
         const shortcutGroups = document.querySelectorAll('.shortcuts-group');
+        const modifierKeys = document.querySelectorAll('.modifier-key');
+        
+        let activeModifierFilter = null;
         
         // Common search terms and their synonyms
         const searchTerms = {
@@ -2373,11 +2376,20 @@
             'spotlight', 'finder', 'terminal', 'выделить все', 'полный экран'
         ];
         
+        // Map modifier keys to their symbols
+        const modifierSymbols = {
+            'fn': '🌐',
+            'ctrl': '⌃',
+            'option': '⌥',
+            'shift': '⇧',
+            'command': '⌘'
+        };
+        
         // Improved search algorithm with word boundaries and fuzzy matching
         function normalizeText(text) {
             return text.toLowerCase()
                 .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-                .replace(/[^\w\sЀ-ӿ]/g, ' ') // Keep only word characters and Cyrillic
+                .replace(/[^\w\sЀ-ӿ⌘⌥⌃⇧🌐]/g, ' ') // Keep modifier symbols
                 .replace(/\s+/g, ' ')
                 .trim();
         }
@@ -2426,6 +2438,17 @@
             return relevanceScore / totalQueryWords;
         }
         
+        function containsModifier(shortcutKeys, modifierKey) {
+            const symbol = modifierSymbols[modifierKey];
+            return shortcutKeys.includes(symbol) || 
+                   shortcutKeys.toLowerCase().includes(modifierKey.toLowerCase()) ||
+                   (modifierKey === 'command' && shortcutKeys.includes('⌘')) ||
+                   (modifierKey === 'option' && shortcutKeys.includes('⌥')) ||
+                   (modifierKey === 'ctrl' && shortcutKeys.includes('⌃')) ||
+                   (modifierKey === 'shift' && shortcutKeys.includes('⇧')) ||
+                   (modifierKey === 'fn' && shortcutKeys.includes('🌐'));
+        }
+        
         function showSearchHints(query) {
             if (!query || query.length < 2) {
                 searchHints.style.display = 'none';
@@ -2447,7 +2470,7 @@
                 searchHints.querySelectorAll('.search-hint').forEach(hint => {
                     hint.addEventListener('click', () => {
                         searchInput.value = hint.dataset.term;
-                        searchInput.dispatchEvent(new Event('input'));
+                        performSearch();
                         searchHints.style.display = 'none';
                     });
                 });
@@ -2456,28 +2479,30 @@
             }
         }
         
-        function updateSearchResultsInfo(visibleCount, totalCount) {
-            if (searchInput.value.trim()) {
-                searchResultsInfo.textContent = `Найдено: ${visibleCount} из ${totalCount} комбинаций`;
+        function updateSearchResultsInfo(visibleCount, totalCount, filterType = '') {
+            let infoText = '';
+            
+            if (activeModifierFilter && searchInput.value.trim()) {
+                infoText = `Найдено: ${visibleCount} с "${modifierSymbols[activeModifierFilter]}" и "поиск"`;
+            } else if (activeModifierFilter) {
+                infoText = `Найдено: ${visibleCount} с "${modifierSymbols[activeModifierFilter]}"`;
+            } else if (searchInput.value.trim()) {
+                infoText = `Найдено: ${visibleCount} из ${totalCount} комбинаций`;
+            }
+            
+            if (infoText) {
+                searchResultsInfo.textContent = infoText;
                 searchResultsInfo.style.display = 'block';
             } else {
                 searchResultsInfo.style.display = 'none';
             }
         }
         
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.trim();
+        function performSearch() {
+            const query = searchInput.value.trim();
             
             // Show search hints
             showSearchHints(query);
-            
-            if (query === '') {
-                // Show all groups and rows
-                shortcutGroups.forEach(group => group.style.display = 'block');
-                shortcutRows.forEach(row => row.style.display = 'flex');
-                updateSearchResultsInfo(0, 0);
-                return;
-            }
             
             let totalVisible = 0;
             let totalRows = 0;
@@ -2491,15 +2516,27 @@
                     const keys = row.querySelector('.shortcut-keys').textContent;
                     const description = row.querySelector('.shortcut-description').textContent;
                     
-                    // Calculate relevance for both keys and description
-                    const keyRelevance = calculateRelevance(query, keys);
-                    const descRelevance = calculateRelevance(query, description);
-                    const maxRelevance = Math.max(keyRelevance, descRelevance);
+                    let shouldShow = true;
                     
-                    // Set minimum relevance threshold
-                    if (maxRelevance > 0.4) {
+                    // Apply modifier filter
+                    if (activeModifierFilter) {
+                        shouldShow = containsModifier(keys, activeModifierFilter);
+                    }
+                    
+                    // Apply search query filter
+                    if (shouldShow && query) {
+                        const keyRelevance = calculateRelevance(query, keys);
+                        const descRelevance = calculateRelevance(query, description);
+                        const maxRelevance = Math.max(keyRelevance, descRelevance);
+                        shouldShow = maxRelevance > 0.4;
+                        
+                        if (shouldShow) {
+                            row.style.order = Math.round((1 - maxRelevance) * 100);
+                        }
+                    }
+                    
+                    if (shouldShow) {
                         row.style.display = 'flex';
-                        row.style.order = Math.round((1 - maxRelevance) * 100); // Order by relevance
                         hasVisibleRows = true;
                         totalVisible++;
                     } else {
@@ -2511,6 +2548,50 @@
             });
             
             updateSearchResultsInfo(totalVisible, totalRows);
+        }
+        
+        function clearAllFilters() {
+            activeModifierFilter = null;
+            searchInput.value = '';
+            
+            // Remove active class from all modifier keys
+            modifierKeys.forEach(key => key.classList.remove('active'));
+            
+            // Show all content
+            shortcutGroups.forEach(group => {
+                group.style.display = 'block';
+                group.querySelectorAll('.shortcut-row').forEach(row => {
+                    row.style.display = 'flex';
+                    row.style.order = '';
+                });
+            });
+            
+            updateSearchResultsInfo(0, 0);
+        }
+        
+        // Event listeners
+        searchInput.addEventListener('input', performSearch);
+        
+        // Modifier key click handlers
+        modifierKeys.forEach(key => {
+            key.addEventListener('click', () => {
+                const keyType = key.dataset.key;
+                
+                if (activeModifierFilter === keyType) {
+                    // If same modifier clicked, clear filter
+                    clearAllFilters();
+                } else {
+                    // Set new modifier filter
+                    activeModifierFilter = keyType;
+                    
+                    // Update UI
+                    modifierKeys.forEach(k => k.classList.remove('active'));
+                    key.classList.add('active');
+                    
+                    // Perform search with modifier filter
+                    performSearch();
+                }
+            });
         });
         
         // Hide hints when clicking outside
@@ -2520,11 +2601,21 @@
             }
         });
         
-        // Hide hints on Escape key
+        // Hide hints on Escape key and clear filters on double Escape
+        let escapeCount = 0;
         searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                searchHints.style.display = 'none';
-                if (!searchInput.value) {
+                escapeCount++;
+                setTimeout(() => { escapeCount = 0; }, 500); // Reset after 500ms
+                
+                if (escapeCount === 1) {
+                    searchHints.style.display = 'none';
+                    if (!searchInput.value && !activeModifierFilter) {
+                        searchInput.blur();
+                    }
+                } else if (escapeCount === 2) {
+                    // Double escape - clear all filters
+                    clearAllFilters();
                     searchInput.blur();
                 }
             }
@@ -2537,12 +2628,12 @@
             button.addEventListener('click', () => {
                 const targetSection = button.dataset.section;
                 
+                // Clear any active modifier filters when using navigation
+                clearAllFilters();
+                
                 // Update active button
                 navButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                
-                // Clear search
-                searchInput.value = '';
                 
                 if (targetSection === 'all') {
                     shortcutGroups.forEach(group => {
