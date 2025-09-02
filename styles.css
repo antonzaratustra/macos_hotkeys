@@ -682,7 +682,6 @@ body.light-theme .shortcuts-group h2 {
 
 .shortcut-row {
     display: flex;
-    padding: 16px 20px;
     transition: all 0.3s ease;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -1502,4 +1501,127 @@ body.light-theme .shortcut-tooltip-header {
 
 body.light-theme .shortcut-tooltip-body {
     color: rgba(33, 37, 41, 0.9);
+}
+
+/* Favorites heart icon styles */
+.favorite-heart {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 140, 0, 0.2);
+    color: rgba(255, 140, 0, 0.6);
+    text-shadow: 0 0 10px rgba(255, 140, 0, 0.3);
+}
+
+.favorite-heart:hover {
+    background: rgba(255, 140, 0, 0.1);
+    border-color: rgba(255, 140, 0, 0.4);
+    color: rgba(255, 140, 0, 0.8);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 140, 0, 0.4);
+}
+
+.favorite-heart.favorited {
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 99, 71, 0.15));
+    border-color: rgba(255, 140, 0, 0.6);
+    color: #ff8c00;
+    text-shadow: 0 0 15px rgba(255, 140, 0, 0.8), 0 0 30px rgba(255, 140, 0, 0.6);
+    animation: heartGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes heartGlow {
+    0% {
+        box-shadow: 0 0 15px rgba(255, 140, 0, 0.6), 0 0 30px rgba(255, 140, 0, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 25px rgba(255, 140, 0, 0.8), 0 0 40px rgba(255, 140, 0, 0.6);
+    }
+}
+
+/* Light theme heart styles */
+body.light-theme .favorite-heart {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 107, 53, 0.3);
+    color: rgba(255, 107, 53, 0.7);
+    text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+}
+
+body.light-theme .favorite-heart:hover {
+    background: rgba(255, 107, 53, 0.1);
+    border-color: rgba(255, 107, 53, 0.5);
+    color: rgba(255, 107, 53, 0.9);
+    box-shadow: 0 0 15px rgba(255, 107, 53, 0.4);
+}
+
+body.light-theme .favorite-heart.favorited {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 140, 66, 0.15));
+    border-color: rgba(255, 107, 53, 0.6);
+    color: #ff6b35;
+    text-shadow: 0 0 15px rgba(255, 107, 53, 0.8), 0 0 30px rgba(255, 107, 53, 0.6);
+}
+
+/* Adjust shortcut row for heart space */
+.shortcut-row {
+    padding: 16px 55px 16px 20px;
+    position: relative;
+}
+
+/* Favorites empty state */
+.favorites-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.favorites-empty-state {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: 1 / -1;
+    margin: 0;
+}
+
+.favorites-empty .empty-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+    display: block;
+}
+
+.favorites-empty .empty-text {
+    margin-bottom: 10px;
+    font-weight: 600;
+    display: block;
+}
+
+.favorites-empty .empty-hint {
+    font-size: 14px;
+    opacity: 0.7;
+    max-width: 400px;
+    line-height: 1.4;
+    display: block;
+}
+
+body.light-theme .favorites-empty {
+    color: rgba(0, 0, 0, 0.6);
 }

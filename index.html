@@ -32,6 +32,7 @@
             </div>
             <div class="navigation-buttons">
                 <button class="nav-btn" data-section="all">📋 Все</button>
+                <button class="nav-btn" data-section="favorites" id="favorites-btn">❤️ Избранное</button>
                 <button class="nav-btn" data-section="system">⚙️ Системные</button>
                 <button class="nav-btn" data-section="finder">📁 Finder</button>
                 <button class="nav-btn" data-section="text">📝 Текст</button>
@@ -80,6 +81,7 @@
                             <kbd class="key symbol-key">⌘</kbd> <kbd class="key">X</kbd>
                         </div>
                         <div class="shortcut-description">✂️ Вырезание выделенного объекта и копирование в буфер обмена. - Контекст: Универсальное.</div>
+                        <div class="favorite-heart" data-tooltip="Добавить в избранное">♥</div>
                     </div>
                     <div class="shortcut-row">
                         <div class="shortcut-keys">
@@ -2533,6 +2535,242 @@
         window.addEventListener('scroll', hideTooltip);
         window.addEventListener('resize', hideTooltip);
         
+        // Favorites functionality
+        let favorites = JSON.parse(localStorage.getItem('macosShortcutsFavorites')) || [];
+        let isShowingFavoritesOnly = false;
+        
+        console.log('Loaded favorites from localStorage:', favorites);
+        
+        function generateShortcutId(row) {
+            const keysEl = row.querySelector('.shortcut-keys');
+            const descriptionEl = row.querySelector('.shortcut-description');
+            
+            if (!keysEl || !descriptionEl) {
+                return 'unknown_' + Math.random().toString(36).substr(2, 9);
+            }
+            
+            const keys = keysEl.textContent.trim();
+            const description = descriptionEl.textContent.trim();
+            
+            // Create a simple hash from the combination
+            const combined = keys + '||' + description;
+            let hash = 0;
+            for (let i = 0; i < combined.length; i++) {
+                const char = combined.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return 'shortcut_' + Math.abs(hash).toString(36);
+        }
+        
+        function saveFavorites() {
+            localStorage.setItem('macosShortcutsFavorites', JSON.stringify(favorites));
+        }
+        
+        function addToFavorites(shortcutId, sectionName) {
+            if (!favorites.find(f => f.id === shortcutId)) {
+                favorites.push({ id: shortcutId, section: sectionName });
+                saveFavorites();
+            }
+        }
+        
+        function removeFromFavorites(shortcutId) {
+            favorites = favorites.filter(f => f.id !== shortcutId);
+            saveFavorites();
+        }
+        
+        function isFavorited(shortcutId) {
+            return favorites.some(f => f.id === shortcutId);
+        }
+        
+        function updateHeartIcon(heart, favorited) {
+            if (favorited) {
+                heart.classList.add('favorited');
+                heart.innerHTML = '❤️';
+                heart.setAttribute('data-tooltip', 'Удалить из избранного');
+            } else {
+                heart.classList.remove('favorited');
+                heart.innerHTML = '♥';
+                heart.setAttribute('data-tooltip', 'Добавить в избранное');
+            }
+        }
+        
+        function initializeFavoritesForAllRows() {
+            const allRows = document.querySelectorAll('.shortcut-row');
+            console.log('Initializing favorites for', allRows.length, 'rows');
+            
+            allRows.forEach((row, index) => {
+                // Add heart if not already present
+                let heart = row.querySelector('.favorite-heart');
+                if (!heart) {
+                    heart = document.createElement('div');
+                    heart.className = 'favorite-heart';
+                    heart.setAttribute('data-tooltip', 'Добавить в избранное');
+                    heart.innerHTML = '♥';
+                    row.appendChild(heart);
+                    console.log('Added heart to row', index);
+                }
+                
+                // Generate unique ID for this shortcut
+                const keysEl = row.querySelector('.shortcut-keys');
+                const descriptionEl = row.querySelector('.shortcut-description');
+                
+                if (!keysEl || !descriptionEl) {
+                    console.warn('Missing keys or description element in row', index);
+                    return;
+                }
+                
+                const keys = keysEl.textContent.trim();
+                const description = descriptionEl.textContent.trim();
+                const shortcutId = generateShortcutId(row);
+                const sectionName = row.closest('.shortcuts-group')?.querySelector('h2')?.textContent?.trim() || 'Unknown';
+                
+                console.log('Processing row:', keys, 'ID:', shortcutId);
+                
+                // Set initial state based on saved favorites
+                updateHeartIcon(heart, isFavorited(shortcutId));
+                
+                // Remove existing click handlers to avoid duplicates
+                const newHeart = heart.cloneNode(true);
+                heart.parentNode.replaceChild(newHeart, heart);
+                heart = newHeart;
+                
+                // Add click handler
+                heart.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    
+                    console.log('Heart clicked for:', keys);
+                    
+                    if (isFavorited(shortcutId)) {
+                        removeFromFavorites(shortcutId);
+                        updateHeartIcon(heart, false);
+                        console.log('Removed from favorites:', keys);
+                        
+                        // If we're showing favorites only and this was removed, refresh the view
+                        if (isShowingFavoritesOnly) {
+                            showFavoritesOnly();
+                        }
+                    } else {
+                        addToFavorites(shortcutId, sectionName);
+                        updateHeartIcon(heart, true);
+                        console.log('Added to favorites:', keys);
+                    }
+                });
+                
+                // Add tooltip functionality for hearts
+                heart.addEventListener('mouseenter', (e) => {
+                    const tooltip = heart.getAttribute('data-tooltip');
+                    if (tooltip && !currentTooltip) {
+                        showTooltip(e, tooltip);
+                    }
+                });
+                
+                heart.addEventListener('mouseleave', () => {
+                    hideTooltip();
+                });
+            });
+        }
+        
+        function showFavoritesOnly() {
+            isShowingFavoritesOnly = true;
+            
+            // Clear any active modifier filter
+            activeModifierFilter = null;
+            modifierKeys.forEach(key => key.classList.remove('active'));
+            
+            // Clear search
+            searchInput.value = '';
+            searchHints.style.display = 'none';
+            
+            if (favorites.length === 0) {
+                // Show empty state
+                shortcutGroups.forEach(group => group.style.display = 'none');
+                
+                // Create or show empty state
+                let emptyState = document.querySelector('.favorites-empty-state');
+                if (!emptyState) {
+                    emptyState = document.createElement('div');
+                    emptyState.className = 'favorites-empty-state';
+                    emptyState.innerHTML = `
+                        <div class="favorites-empty">
+                            <div class="empty-icon">❤️</div>
+                            <div class="empty-text">В избранном пока ничего нет</div>
+                            <div class="empty-hint">Нажмите на сердечко рядом с любой комбинацией, чтобы добавить её в избранное</div>
+                        </div>
+                    `;
+                    document.getElementById('shortcuts-container').appendChild(emptyState);
+                }
+                emptyState.style.display = 'block';
+                
+                updateSearchResultsInfo(0, 0, 0);
+                return;
+            }
+            
+            // Hide empty state if it exists
+            const emptyState = document.querySelector('.favorites-empty-state');
+            if (emptyState) {
+                emptyState.style.display = 'none';
+            }
+            
+            // Group favorites by section
+            const favoritesBySection = {};
+            favorites.forEach(fav => {
+                if (!favoritesBySection[fav.section]) {
+                    favoritesBySection[fav.section] = [];
+                }
+                favoritesBySection[fav.section].push(fav.id);
+            });
+            
+            let totalVisible = 0;
+            let visibleGroups = 0;
+            
+            shortcutGroups.forEach(group => {
+                const sectionName = group.querySelector('h2').textContent.trim();
+                const sectionFavorites = favoritesBySection[sectionName] || [];
+                
+                if (sectionFavorites.length > 0) {
+                    group.style.display = 'block';
+                    visibleGroups++;
+                    
+                    const rows = group.querySelectorAll('.shortcut-row');
+                    rows.forEach(row => {
+                        const shortcutId = generateShortcutId(row);
+                        if (sectionFavorites.includes(shortcutId)) {
+                            row.style.display = 'flex';
+                            totalVisible++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                } else {
+                    group.style.display = 'none';
+                }
+            });
+            
+            updateSearchResultsInfo(totalVisible, favorites.length, visibleGroups);
+        }
+        
+        function showAllShortcuts() {
+            isShowingFavoritesOnly = false;
+            
+            // Hide empty state if it exists
+            const emptyState = document.querySelector('.favorites-empty-state');
+            if (emptyState) {
+                emptyState.style.display = 'none';
+            }
+            
+            // Show all groups and rows
+            shortcutGroups.forEach(group => {
+                group.style.display = 'block';
+                group.querySelectorAll('.shortcut-row').forEach(row => {
+                    row.style.display = 'flex';
+                });
+            });
+            
+            updateSearchResultsInfo(0, 0, shortcutGroups.length);
+        }
+        
         // Common search terms and their synonyms
         const searchTerms = {
             'новое': ['новый', 'создать', 'открыть'],
@@ -2690,6 +2928,12 @@
             // Show search hints
             showSearchHints(query);
             
+            // If we're in favorites mode and there's a search, apply search within favorites
+            if (isShowingFavoritesOnly) {
+                showFavoritesOnly();
+                return;
+            }
+            
             let totalVisible = 0;
             let totalRows = 0;
             let visibleGroups = 0;
@@ -2834,6 +3078,20 @@
                 const shortcutsContainer = document.getElementById('shortcuts-container');
                 let visibleGroups = 0;
                 
+                if (targetSection === 'favorites') {
+                    showFavoritesOnly();
+                    return;
+                }
+                
+                // Show all shortcuts if not favorites
+                isShowingFavoritesOnly = false;
+                
+                // Hide empty state if it exists
+                const emptyState = document.querySelector('.favorites-empty-state');
+                if (emptyState) {
+                    emptyState.style.display = 'none';
+                }
+                
                 if (targetSection === 'all') {
                     shortcutGroups.forEach(group => {
                         group.style.display = 'block';
@@ -2918,30 +3176,48 @@
                 if (!row.querySelector('kbd')) {
                     let text = row.textContent.trim();
                     
+                    // Skip if it's already been processed or is complex
+                    if (text.includes('или') || text.length > 50) {
+                        return;
+                    }
+                    
                     // Split by common separators but preserve the structure
                     let parts = text.split(/\s*[-+]\s*/).filter(part => part.trim());
                     
-                    let newHtml = parts.map(part => {
-                        part = part.trim();
+                    // Only process if we have simple key combinations
+                    if (parts.length <= 4) {
+                        let newHtml = parts.map(part => {
+                            part = part.trim();
+                            
+                            // Check if this part contains macOS symbols
+                            if (/[⌘⌥⌃⇧]/.test(part)) {
+                                return `<kbd class="key symbol-key">${part}</kbd>`;
+                            }
+                            // Check if it's a simple key name
+                            else if (/^[A-Z0-9]$/.test(part) || ['Esc', 'Tab', 'Space', 'Enter', 'Delete'].includes(part)) {
+                                return `<kbd class="key">${part}</kbd>`;
+                            }
+                            // For everything else, leave as is
+                            else {
+                                return part;
+                            }
+                        }).join('-');
                         
-                        // Check if this part contains macOS symbols
-                        if (/[⌘⌥⌃⇧]/.test(part)) {
-                            return `<kbd class="key symbol-key">${part}</kbd>`;
-                        }
-                        // Check if it's a common key name
-                        else if (/^(Fn|Delete|Tab|Esc|Return|Space|Enter|Shift|Command|Option|Control|Ctrl|Alt|Cmd|F[0-9]+|Home|End|Page\s+Up|Page\s+Down|Insert|Print\s+Screen|Стрелка\s+(?:вверх|вниз|влево|вправо)|[A-Z0-9]|[,;.\[\]{}()\-=+`~!@#$%^&*_|\\:"'<>?/])$/i.test(part)) {
-                            return `<kbd class="key">${part}</kbd>`;
-                        }
-                        // For everything else, treat as regular key
-                        else {
-                            return `<kbd class="key">${part}</kbd>`;
-                        }
-                    }).join(' ');
-                    
-                    row.innerHTML = newHtml;
+                        row.innerHTML = newHtml;
+                    }
                 }
             });
+            
+            // Initialize favorites for all rows after DOM processing
+            setTimeout(() => {
+                initializeFavoritesForAllRows();
+            }, 100);
         });
+        
+        // Also initialize favorites immediately for already rendered content
+        setTimeout(() => {
+            initializeFavoritesForAllRows();
+        }, 200);
 
         // Matrix animation state
         let matrixEnabled = true;
