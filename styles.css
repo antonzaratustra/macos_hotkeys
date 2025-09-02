@@ -163,6 +163,14 @@ header {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+/* Новая строка заголовка с названием и переключателями */
+.header-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
 /* Новая строка заголовка */
 .header-row {
     display: flex;
@@ -195,12 +203,56 @@ h1 {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin: 0;
 }
 
 body.light-theme h1 {
     background: linear-gradient(45deg, #ff6b35, #ff8c42);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+/* Header toggles styling */
+.header-toggles {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.header-toggle {
+    font-size: 32px;
+    font-weight: 600;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Proxima Nova', 'Helvetica Neue', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #666;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    user-select: none;
+}
+
+.header-toggle:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.6));
+}
+
+.header-toggle[data-active="true"] {
+    background: linear-gradient(45deg, #ff8c00, #ff6347);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.4));
+}
+
+.header-toggle[data-active="false"] {
+    color: #666;
+    filter: none;
+}
+
+body.light-theme .header-toggle[data-active="true"] {
+    background: linear-gradient(45deg, #ff6b35, #ff8c42);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Поиск */
@@ -388,55 +440,7 @@ body.light-theme .nav-btn.active {
 }
 
 /* Переключатели */
-/* Note: moved to absolute positioning in .header-row */
-
-.view-toggle, .theme-toggle, .matrix-toggle {
-    padding: 10px 16px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    color: #e0e0e0;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.view-toggle:hover, .theme-toggle:hover, .matrix-toggle:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
-}
-
-.matrix-toggle.disabled {
-    background: rgba(255, 99, 71, 0.2);
-    border-color: rgba(255, 99, 71, 0.3);
-    color: #ff6347;
-}
-
-.matrix-toggle.disabled:hover {
-    background: rgba(255, 99, 71, 0.3);
-}
-
-body.light-theme .view-toggle, body.light-theme .theme-toggle, body.light-theme .matrix-toggle {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(0, 0, 0, 0.1);
-    color: #495057;
-}
-
-body.light-theme .view-toggle:hover, body.light-theme .theme-toggle:hover, body.light-theme .matrix-toggle:hover {
-    background: rgba(255, 255, 255, 0.95);
-}
-
-body.light-theme .matrix-toggle.disabled {
-    background: rgba(255, 99, 71, 0.15);
-    border-color: rgba(255, 99, 71, 0.25);
-    color: #ff6347;
-}
-
-body.light-theme .matrix-toggle.disabled:hover {
-    background: rgba(255, 99, 71, 0.25);
-}
+/* Note: moved to header-toggles styling above */
 
 /* Floating Modifier Keys Panel */
 .modifier-keys-panel {
@@ -459,6 +463,8 @@ body.light-theme .matrix-toggle.disabled:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 12px 16px;
     background: linear-gradient(135deg, #ff6347 0%, #ff4444 50%, #ff6347 100%);
     border: 2px solid transparent;
@@ -466,11 +472,17 @@ body.light-theme .matrix-toggle.disabled:hover {
     color: #ffffff;
     cursor: pointer;
     transition: all 0.3s ease;
-    min-width: 70px;
+    min-width: 80px; /* Fixed width like Command button */
     box-shadow: 
         0 4px 8px rgba(0, 0, 0, 0.3),
         0 0 15px rgba(255, 99, 71, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Special case for Command button - adaptive width */
+.modifier-key[data-key="command"] {
+    min-width: auto;
+    padding: 12px 20px; /* More padding for better text spacing */
 }
 
 .modifier-key:hover {
@@ -927,6 +939,10 @@ body.light-theme footer {
         font-size: 20px;
     }
     
+    .header-toggle {
+        font-size: 24px;
+    }
+    
     .search-container {
         width: 100%;
     }
@@ -939,6 +955,22 @@ body.light-theme footer {
     .modifier-keys-panel {
         gap: 10px;
         padding: 12px;
+    }
+    
+    .modifier-key {
+        min-width: 50px;
+    }
+    
+    .modifier-key[data-key="command"] {
+        padding: 8px 14px;
+    }
+    
+    .modifier-symbol {
+        font-size: 16px;
+    }
+    
+    .modifier-label {
+        font-size: 9px;
     }
     
     .navigation-buttons {
@@ -1013,17 +1045,20 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 
 /* Адаптивная сетка для мобильных устройств */
 @media (max-width: 768px) {
+    .header-title-row {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .header-toggles {
+        justify-content: center;
+    }
+    
     .header-row {
         flex-direction: column;
         align-items: center;
         gap: 15px;
-    }
-    
-    .toggles {
-        position: relative;
-        right: auto;
-        justify-content: center;
-        flex-wrap: wrap;
     }
     
     .search-container {
@@ -1040,12 +1075,23 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
         font-size: 13px;
     }
     
-    .view-toggle, .theme-toggle, .matrix-toggle {
-        padding: 8px 12px;
-        font-size: 13px;
-    }
-    
     .search-hints {
         max-height: 150px;
+    }
+    
+    .modifier-key {
+        min-width: 60px;
+    }
+    
+    .modifier-key[data-key="command"] {
+        padding: 10px 16px;
+    }
+    
+    .modifier-symbol {
+        font-size: 18px;
+    }
+    
+    .modifier-label {
+        font-size: 10px;
     }
 }

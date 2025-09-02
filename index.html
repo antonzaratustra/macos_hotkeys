@@ -15,17 +15,19 @@
     
     <div class="container">
         <header>
-            <h1>🖥️ Горячие клавиши macOS</h1>
+            <div class="header-title-row">
+                <h1>🍎 Горячие клавиши macOS</h1>
+                <div class="header-toggles">
+                    <div class="header-toggle" id="matrix-toggle" data-active="true">✨</div>
+                    <div class="header-toggle" id="view-toggle" data-active="false">📊</div>
+                    <div class="header-toggle" id="theme-toggle" data-active="false">☀️</div>
+                </div>
+            </div>
             <div class="header-row">
                 <div class="search-container">
                     <input type="text" id="search-input" placeholder="🔍 Поиск горячих клавиш..." autocomplete="off" />
                     <div class="search-hints" id="search-hints"></div>
                     <div class="search-results-info" id="search-results-info"></div>
-                </div>
-                <div class="toggles">
-                    <div class="view-toggle" id="view-toggle">📊 Сетка</div>
-                    <div class="theme-toggle" id="theme-toggle">☀️ Светлая</div>
-                    <div class="matrix-toggle" id="matrix-toggle">✨ Матрица</div>
                 </div>
             </div>
             <div class="navigation-buttons">
@@ -2574,11 +2576,9 @@
         
         viewToggle.addEventListener('click', () => {
             shortcutsContainer.classList.toggle('list-view');
-            if (shortcutsContainer.classList.contains('list-view')) {
-                viewToggle.innerHTML = '📋 Список';
-            } else {
-                viewToggle.innerHTML = '📊 Сетка';
-            }
+            const isActive = shortcutsContainer.classList.contains('list-view');
+            viewToggle.dataset.active = isActive;
+            viewToggle.innerHTML = isActive ? '📋' : '📊';
         });
 
         // Theme toggle
@@ -2586,19 +2586,17 @@
         
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('light-theme');
-            if (document.body.classList.contains('light-theme')) {
-                themeToggle.innerHTML = '🌙 Тёмная';
-            } else {
-                themeToggle.innerHTML = '☀️ Светлая';
-            }
+            const isLight = document.body.classList.contains('light-theme');
+            themeToggle.dataset.active = isLight;
+            themeToggle.innerHTML = isLight ? '🌙' : '☀️';
         });
         
         // Matrix toggle functionality
         const matrixToggle = document.getElementById('matrix-toggle');
         matrixToggle.addEventListener('click', () => {
             matrixEnabled = !matrixEnabled;
-            matrixToggle.classList.toggle('disabled', !matrixEnabled);
-            matrixToggle.innerHTML = matrixEnabled ? '✨ Матрица' : '❌ Матрица';
+            matrixToggle.dataset.active = matrixEnabled;
+            matrixToggle.innerHTML = matrixEnabled ? '✨' : '❌';
             
             if (matrixEnabled) {
                 createMatrixBackground();
