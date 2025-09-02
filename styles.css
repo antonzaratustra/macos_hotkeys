@@ -1140,6 +1140,249 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 107, 53, 0.8);
 }
 
+/* Footer */
+footer {
+    margin-top: 40px;
+    padding: 30px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.brand-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.brand-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 140, 0, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.brand-logo:hover {
+    transform: scale(1.05);
+    border-color: rgba(255, 140, 0, 0.6);
+    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+}
+
+.brand-name {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(45deg, #ff8c00, #ff6347);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.brand-subtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    color: #e0e0e0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.social-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.social-link.youtube {
+    border-color: rgba(255, 0, 0, 0.3);
+}
+
+.social-link.youtube:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: rgba(255, 0, 0, 0.5);
+    color: #ff0000;
+    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
+}
+
+.social-link.telegram {
+    border-color: rgba(255, 140, 0, 0.3);
+}
+
+.social-link.telegram:hover {
+    background: rgba(255, 140, 0, 0.1);
+    border-color: rgba(255, 140, 0, 0.5);
+    color: #ff8c00;
+    box-shadow: 0 8px 25px rgba(255, 140, 0, 0.3);
+}
+
+.social-icon {
+    width: 18px;
+    height: 18px;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover .social-icon {
+    transform: scale(1.1);
+}
+
+/* Light theme footer */
+body.light-theme footer {
+    background: rgba(255, 255, 255, 0.8);
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .brand-name {
+    background: linear-gradient(45deg, #ff6b35, #ff8c42);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.light-theme .brand-subtitle {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+body.light-theme .brand-logo {
+    border-color: rgba(255, 107, 53, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.2);
+}
+
+body.light-theme .brand-logo:hover {
+    border-color: rgba(255, 107, 53, 0.6);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+}
+
+body.light-theme .social-link {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #495057;
+}
+
+body.light-theme .social-link.youtube {
+    border-color: rgba(255, 0, 0, 0.2);
+}
+
+body.light-theme .social-link.youtube:hover {
+    background: rgba(255, 0, 0, 0.05);
+    border-color: rgba(255, 0, 0, 0.3);
+    color: #ff0000;
+    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.2);
+}
+
+body.light-theme .social-link.telegram {
+    border-color: rgba(255, 140, 0, 0.2);
+}
+
+body.light-theme .social-link.telegram:hover {
+    background: rgba(255, 140, 0, 0.05);
+    border-color: rgba(255, 140, 0, 0.3);
+    color: #ff8c00;
+    box-shadow: 0 8px 25px rgba(255, 140, 0, 0.2);
+}
+
+/* Mobile responsive footer */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: left;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .footer-socials {
+        align-self: center;
+    }
+    
+    .social-link {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    
+    .social-icon {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .brand-logo {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-name {
+        font-size: 20px;
+    }
+    
+    .brand-subtitle {
+        font-size: 12px;
+    }
+    
+    .footer-socials {
+        gap: 10px;
+    }
+    
+    .social-link {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .brand-logo {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .brand-logo-container {
+        gap: 12px;
+    }
+}
+
 /* Адаптивная сетка для мобильных устройств */
 @media (max-width: 768px) {
     .header-title-row {
